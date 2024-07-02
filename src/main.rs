@@ -7,19 +7,25 @@
  * 4. 應用運算符到左右操作數。
  * 5. 重複這個過程，直到遇到優先級較低的運算符或表達式結束。
  */
-mod calc_v1;
+// mod calc_v1;
+mod calc_v2;
 
-use calc_v1::{CalcV1, Token};
+// use calc_v1::{CalcV1, Token};
+use calc_v2::{CalcV2, Token};
 
 fn main() {
-    let tokens = vec![
+    let tokens: Vec<Token> = vec![
         Token::Number(3),
         Token::Plus,
         Token::Number(4),
         Token::Multiply,
         Token::Number(2),
+        Token::Divide,
+        Token::Number(2),
+        Token::Power,
+        Token::Number(2),
     ];
 
-    let result = CalcV1::calculate(&tokens);
+    let result = CalcV2::calculate(&tokens);
     println!("Result: {}", result); // Result: 11
 }
