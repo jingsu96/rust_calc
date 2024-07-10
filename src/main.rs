@@ -15,15 +15,17 @@ use calc_v2::{CalcV2, Token};
 
 fn main() {
     let tokens: Vec<Token> = vec![
-        Token::Number(3),
+        Token::LeftParen,
+        Token::Number(1),
         Token::Plus,
-        Token::Number(4),
+        Token::Number(2),
         Token::Multiply,
         Token::Number(2),
-        Token::Divide,
-        Token::Number(2),
+        Token::RightParen,
         Token::Power,
-        Token::Number(2),
+        Token::Number(5),
+        Token::Divide,
+        Token::Number(64),
     ];
 
     let result = CalcV2::calculate(&tokens);

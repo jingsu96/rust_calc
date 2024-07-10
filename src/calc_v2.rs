@@ -22,32 +22,30 @@ impl CalcV2 {
         }
     }
 
-    fn is_right_associative(token: &Token) -> bool {
-        matches!(token, Token::Power)
-    }
-
     fn parse_expression(tokens: &[Token], min_precedence: i32) -> (i32, usize) {
-        let (mut lhs, mut pos) = CalcV2::parse_primary(&tokens);
+        if tokens.is_empty() {
+            panic!("Unexpected end of expression");
+        }
+
+        let (mut lhs, mut pos) = CalcV2::parse_primary(tokens);
 
         while pos < tokens.len() {
             let op = &tokens[pos];
 
-            if CalcV2::precedence(op) < min_precedence {
+            if matches!(op, Token::RightParen) || CalcV2::precedence(op) < min_precedence {
                 break;
             }
 
             pos += 1;
 
-            let next_min_precedence = if CalcV2::is_right_associative(op) {
-                CalcV2::precedence(op)
-            } else {
-                CalcV2::precedence(op) + 1
-            };
+            if pos >= tokens.len() {
+                break;
+            }
 
-            let (rhs, rhs_pos) = CalcV2::parse_expression(&tokens[pos..], next_min_precedence);
+            let (rhs, rhs_pos) =
+                CalcV2::parse_expression(&tokens[pos..], CalcV2::precedence(op) + 1);
 
             pos += rhs_pos;
-
             lhs = CalcV2::apply_op(op, lhs, rhs);
         }
 
@@ -66,6 +64,12 @@ impl CalcV2 {
     }
 
     fn parse_primary(tokens: &[Token]) -> (i32, usize) {
+        println!("parse_primary: tokens={:?}", tokens);
+
+        if tokens.is_empty() {
+            panic!("Unexpected end of expression in parse_primary");
+        }
+
         match &tokens[0] {
             Token::Number(n) => (*n, 1),
             Token::LeftParen => {
